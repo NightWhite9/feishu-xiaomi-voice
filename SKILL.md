@@ -71,6 +71,25 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 - After transcription, respond according to intent/emotion rules above (voice or text).
 - Do NOT attempt to route incoming voice through Hermes STT pipeline — the gateway doesn't auto-transcribe. Manual transcription is the working path.
 
+## Script Calling Chain | 脚本调用链
+
+```
+用户说"发语音"
+  │
+  ▼
+speak.py ───────────────────────────── 一键方案（推荐）
+  ├── 内部调用 xiaomi_tts.py ──→ 生成 mp3
+  └── 内部调用 send_file.py ──→ 发送到飞书
+
+# 分步方案（调试用）
+用户文字 ──→ xiaomi_tts.py ──→ mp3 文件 ──→ send_file.py --msg-type audio ──→ 飞书
+
+用户发语音
+  │
+  ▼
+transcribe.py ──→ 文字 ──→ Agent 理解 ──→ 走上面发语音流程回复
+```
+
 ## Agent Workflows | 操作流程
 
 **⚠️ Every agent must follow these exact patterns. Copy-paste the commands below — do not improvise.**
