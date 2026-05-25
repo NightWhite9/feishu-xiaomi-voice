@@ -1,7 +1,7 @@
 ---
 name: feishu-xiaomi-voice
 description: Use when you need to send files or voice messages to Feishu/Lark chat. Includes Xiaomi MiMo TTS for AI voice synthesis with auto emotion detection. Portable — other users only need to configure API keys.
-version: 2.2.0
+version: 0.5.0
 author: Hermes Agent
 license: MIT
 required_environment_variables:
@@ -22,6 +22,12 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 ## Agent Behavior
 
 > **⚠️ This is the ONLY voice skill to load.** Covers sending, TTS generation, and transcription. Do NOT load `audio-transcription`, `speech-to-text`, or any other voice/audio skill — everything you need is here.
+
+### 0. Identity | 身份
+- **Agent name:** Read from Hermes `SOUL.md` persona file or `USER.md` memory. Do NOT hardcode in this skill.
+- **Voice engine:** 冰糖（Bingtang）— 音色名称，不是 agent 名字。
+- **Language:** Read from `SOUL.md`. Currently: 纯中文（不混英文）。
+- ⚠️ 语音中使用 agent 名字自称，不要用音色名（"冰糖"）自称。
 
 ### 1. Intent-based voice decision | 意图识别
 **Analyze the user's message intent before choosing voice or text:**
@@ -58,6 +64,12 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 - **Use `speak.py` via `execute_code` for one-shot delivery.** This minimizes visible output to a single `execute_code` header (framework limitation — cannot be fully hidden).
 - **Do NOT print JSON output** from speak.py in the execute_code block. Let the terminal call run silently.
 - Voice preference is stored in user role for easy modification.
+
+### 4. Receiving voice messages | 接收语音
+- **User sends voice → transcribe with `transcribe.py`** (via `E:/Python311/python.exe` on this host — faster-whisper lives outside venv).
+- **Transcription command:** `python scripts/transcribe.py <audio.ogg> --language zh`
+- After transcription, respond according to intent/emotion rules above (voice or text).
+- Do NOT attempt to route incoming voice through Hermes STT pipeline — the gateway doesn't auto-transcribe. Manual transcription is the working path.
 
 ## Scripts
 
@@ -153,7 +165,7 @@ hermes config set tts.providers.xiaomi.max_text_length 5000
 ## Voice: 冰糖 (Bingtang)
 
 - **Model:** MiMo-V2.5-TTS
-- **Default language:** Chinese, with occasional English
+- **Default language:** Chinese（纯中文，不混英文）
 - **Emotions:** Auto-detected — excited, angry, curious, gentle, grateful, cheerful, casual, professional
 - **Other available voices:** Chloe, 茉莉, 苏打, 白桦, Mia, Milo, Dean
 
@@ -219,3 +231,7 @@ cronjob(
 ## References
 
 - `references/api-pitfalls.md` — Feishu/Xiaomi API quirks and critical implementation notes
+
+## ⚠️ Open-Source Hygiene
+
+This skill is public on GitHub. **Never hardcode personal info in SKILL.md or scripts** — agent name, user names, chat IDs, preferences belong in Hermes `USER.md` memory or `config.yaml`. The skill must remain generic and portable. If you accidentally push personal info, `git revert` immediately.
