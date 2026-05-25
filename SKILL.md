@@ -66,8 +66,9 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 - Voice preference is stored in user role for easy modification.
 
 ### 4. Receiving voice messages | 接收语音
-- **User sends voice → transcribe with `transcribe.py`** (via `E:/Python311/python.exe` on this host — faster-whisper lives outside venv).
+- **User sends voice → transcribe with `transcribe.py`**.
 - **Transcription command:** `python scripts/transcribe.py <audio.ogg> --language zh`
+- If `faster-whisper` isn't in current Python, find the system Python that has it (`which python3`, `where python`).
 - After transcription, respond according to intent/emotion rules above (voice or text).
 - Do NOT attempt to route incoming voice through Hermes STT pipeline — the gateway doesn't auto-transcribe. Manual transcription is the working path.
 
@@ -129,8 +130,9 @@ hermes config set tts.providers.xiaomi.voice <VOICE_NAME>
 # User sends .ogg voice message → transcribe it:
 python scripts/transcribe.py <path/to/audio.ogg> --language zh
 
-# If Python won't find faster-whisper, use system Python:
-E:/Python311/python.exe scripts/transcribe.py <path/to/audio.ogg> --language zh
+# If Python won't find faster-whisper, locate system Python:
+#   Windows: where python   → find the one with faster-whisper
+#   macOS/Linux: which python3
 ```
 
 ### Workflow D: Send a file
