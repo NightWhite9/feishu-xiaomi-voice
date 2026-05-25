@@ -1,6 +1,6 @@
 # feishu-xiaomi-voice
 
-> 飞书智能语音助手 — 冰糖 AI 语音 + 飞书文件发送，一站式语音技能包
+> 飞书智能语音助手 — 小米 AI 语音 + 飞书文件发送，一站式语音技能包
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)](https://www.python.org/)
