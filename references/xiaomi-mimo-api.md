@@ -97,4 +97,6 @@ Audio tags: (紧张), [笑声], (语速加快), etc.
 
 ## Pricing & Rate Limits
 
+⚠️ **限时免费中** — MiMo V2.5 TTS 当前免费，后续收费以官方为准。
+
 See: https://platform.xiaomimimo.com/docs/zh-CN/usage-guide/speech-synthesis-v2.5

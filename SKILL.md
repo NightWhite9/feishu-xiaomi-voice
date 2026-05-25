@@ -164,6 +164,58 @@ pip install requests faster-whisper
 winget install ffmpeg  # for voice message conversion
 ```
 
+## Maintenance: TTS Cache Cleanup | 语音缓存清理
+
+Prevent `~/AppData/Local/hermes/audio_cache/` from growing indefinitely.
+
+### Setup script + cron
+
+Create the cleanup script at `~/AppData/Local/hermes/scripts/cleanup_audio_cache.py`:
+
+```python
+"""Clean up old TTS audio cache files. Deletes .mp3 files older than N days."""
+import os, sys, time
+from pathlib import Path
+
+AUDIO_CACHE_DIR = Path.home() / "AppData" / "Local" / "hermes" / "audio_cache"
+RETENTION_DAYS = 7          # delete files older than this
+
+def main():
+    if not AUDIO_CACHE_DIR.exists():
+        return
+    now = time.time()
+    cutoff = now - (RETENTION_DAYS * 86400)
+    deleted = kept = 0
+    for f in AUDIO_CACHE_DIR.glob("*.mp3"):
+        if f.stat().st_mtime < cutoff:
+            f.unlink()
+            deleted += 1
+        else:
+            kept += 1
+    if deleted > 0:
+        print(f"[cleanup] Deleted {deleted} old TTS file(s) older than {RETENTION_DAYS} days. {kept} file(s) kept.")
+
+if __name__ == "__main__":
+    main()
+```
+
+Then schedule via cron:
+
+```python
+cronjob(
+    action="create",
+    name="清理TTS语音缓存",
+    schedule="0 3 * * *",          # 3 AM daily
+    script="cleanup_audio_cache.py",
+    no_agent=True,                 # script-only, zero tokens
+)
+```
+
+- Runs daily at 3 AM, deletes `.mp3` files older than 7 days
+- `no_agent=True` → pure script, no LLM cost
+- Silent when nothing to delete (empty stdout = auto-skip delivery)
+- Adjust `RETENTION_DAYS` in the script to change retention period
+
 ## References
 
 - `references/api-pitfalls.md` — Feishu/Xiaomi API quirks and critical implementation notes
