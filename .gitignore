@@ -1,0 +1,22 @@
+# Environment variables with secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Temp files
+*.opus
+*.mp3
+*.wav
+audio_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
