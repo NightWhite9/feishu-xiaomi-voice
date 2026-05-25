@@ -71,6 +71,72 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 - After transcription, respond according to intent/emotion rules above (voice or text).
 - Do NOT attempt to route incoming voice through Hermes STT pipeline — the gateway doesn't auto-transcribe. Manual transcription is the working path.
 
+## Agent Workflows | 操作流程
+
+**⚠️ Every agent must follow these exact patterns. Copy-paste the commands below — do not improvise.**
+
+### Workflow A: Send voice message (most common)
+
+```
+# 1. Use execute_code with this exact pattern:
+from hermes_tools import terminal
+terminal(
+    'python "<skill_dir>/scripts/speak.py" --text "<TEXT>" --emotion <EMOTION> --json',
+    timeout=120
+)
+# DO NOT print the result. Just call terminal().
+
+# 2. Emotion values: cheerful, gentle, calm, sad, excited, angry, casual, professional
+```
+
+### Workflow B: Switch voice
+
+```
+# The default voice is 冰糖 (Bingtang). To change:
+# Method 1 — per-call (speak.py):
+python scripts/speak.py --text "..." --voice <VOICE_NAME>
+
+# Method 2 — globally (Hermes config):
+hermes config set tts.providers.xiaomi.voice <VOICE_NAME>
+
+# Available voices:
+#   中文：冰糖、茉莉、苏打、白桦
+#   英文：Chloe、Mia、Milo、Dean
+```
+
+### Workflow C: Transcribe incoming audio
+
+```
+# User sends .ogg voice message → transcribe it:
+python scripts/transcribe.py <path/to/audio.ogg> --language zh
+
+# If Python won't find faster-whisper, use system Python:
+E:/Python311/python.exe scripts/transcribe.py <path/to/audio.ogg> --language zh
+```
+
+### Workflow D: Send a file
+
+```
+python scripts/send_file.py --file <path/to/file>
+```
+
+### Environment setup on new machine
+
+```
+# 1. Clone + install deps
+git clone https://github.com/NightWhite9/feishu-xiaomi-voice.git
+pip install requests faster-whisper
+
+# 2. Set env vars
+export FEISHU_APP_ID=cli_xxxxxxxx
+export FEISHU_APP_SECRET=xxxxxxxx
+export MIMO_API_KEY=sk-xxxxxxxx
+export FEISHU_CHAT_ID=oc_xxxxxxxx
+
+# 3. Test
+python scripts/speak.py --text "测试" --emotion casual
+```
+
 ## Scripts
 
 | Script | Purpose |
