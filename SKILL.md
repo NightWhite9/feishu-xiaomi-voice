@@ -203,6 +203,12 @@ python scripts/speak.py --file message.txt
 
 ## Quick Start
 
+### 0. Install
+
+```bash
+npx skills add NightWhite9/feishu-xiaomi-voice
+```
+
 ### 1. API Keys (in `~/.hermes/.env`)
 
 ```bash
