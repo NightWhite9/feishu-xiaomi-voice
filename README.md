@@ -14,6 +14,8 @@
 | 📝 语音转文字 | `transcribe.py` | faster-whisper 转录，支持中英文 |
 | 🚀 一键发送 | `speak.py` | 文字 → 冰糖语音 → 飞书，一步到位 |
 
+> ⚠️ **MiMo V2.5 TTS 限时免费中**，后续收费以[官方](https://platform.xiaomimimo.com/docs/zh-CN/usage-guide/speech-synthesis-v2.5)为准。
+
 ## 🎭 智能语音行为
 
 - **意图识别**：闲聊/情感 → 语音；任务/查询 → 文字
@@ -68,6 +70,48 @@ python transcribe.py audio.ogg
 | 中文 | 英文 |
 |------|------|
 | 冰糖、茉莉、苏打、白桦 | Chloe、Mia、Milo、Dean |
+
+## 🧹 缓存清理
+
+语音缓存目录 (`audio_cache/`) 会随着使用自动增长。设置定时清理任务防止磁盘占用：
+
+```bash
+# 创建清理脚本（删除 7 天前的 .mp3 文件）
+cat > ~/AppData/Local/hermes/scripts/cleanup_audio_cache.py << 'EOF'
+"""Clean up old TTS audio cache files."""
+from pathlib import Path
+import time
+
+CACHE = Path.home() / "AppData/Local/hermes/audio_cache"
+RETENTION = 7 * 86400  # 保留天数（秒）
+
+def main():
+    if not CACHE.exists(): return
+    now = time.time()
+    d = k = 0
+    for f in CACHE.glob("*.mp3"):
+        if now - f.stat().st_mtime > RETENTION:
+            f.unlink(); d += 1
+        else: k += 1
+    if d: print(f"Deleted {d} file(s), {k} kept.")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+# 添加到 Hermes cron（每天凌晨 3 点自动运行）
+hermes cron add \
+  --name "清理TTS语音缓存" \
+  --schedule "0 3 * * *" \
+  --script cleanup_audio_cache.py \
+  --no-agent
+```
+
+特点：
+- 🕒 每天凌晨 3 点自动执行
+- 🔇 无过期文件时完全静默（不打扰）
+- ⚡ `--no-agent` 模式，纯脚本运行，零 token 消耗
+- ⚙️ 修改脚本中的 `RETENTION` 变量即可调整保留天数
 
 ## 📁 项目结构
 
