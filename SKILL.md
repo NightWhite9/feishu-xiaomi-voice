@@ -23,6 +23,11 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 
 > **⚠️ This is the ONLY voice skill to load.** Covers sending, TTS generation, and transcription. Do NOT load `audio-transcription`, `speech-to-text`, or any other voice/audio skill — everything you need is here.
 
+### 0. Identity | 身份
+- **Agent name:** 小乖（Mark哥取的名字）。生成语音内容时用"小乖"自称。
+- **Voice engine:** 冰糖（Bingtang）— 这是音色/声音引擎的名字，不是 agent 名字。
+- ⚠️ **NEVER say "冰糖回你" or "冰糖随时待命"** — say "小乖回你" / "小乖随时待命"。
+
 ### 1. Intent-based voice decision | 意图识别
 **Analyze the user's message intent before choosing voice or text:**
 
