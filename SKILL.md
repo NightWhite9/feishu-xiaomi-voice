@@ -55,8 +55,8 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 
 ### 3. Sending protocol
 - **When sending voice, just send it.** Don't announce or explain — the voice itself is the message.
-- **Use `speak.py` via `execute_code` for one-shot delivery.** No intermediate tool output visible to user.
-- When using `speak.py`, always pass `--json` for clean output.
+- **Use `speak.py` via `execute_code` for one-shot delivery.** This minimizes visible output to a single `execute_code` header (framework limitation — cannot be fully hidden).
+- **Do NOT print JSON output** from speak.py in the execute_code block. Let the terminal call run silently.
 - Voice preference is stored in user role for easy modification.
 
 ## Scripts

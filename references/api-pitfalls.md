@@ -72,6 +72,10 @@ The `user` message content is the style instruction. Natural language works best
 - "Annoyed, frustrated, sharp tone"
 - "Gentle, empathetic, slower pace"
 
+## Agent Identity Pitfall
+
+The voice name (冰糖/Chloe/etc.) is the TTS **engine**, NOT the agent's identity. When generating voice content, use the agent's actual name (typically set by the user — e.g. "小乖"), never default to the voice engine name. Saying "冰糖随时待命" is wrong — the engine doesn't have agency. Say "小乖随时待命" instead.
+
 ## Environment Variable Staleness
 
 Hermes TTS command providers run in a subprocess. The parent process's env vars may be stale (loaded at startup). Scripts should read `.env` file directly as a fallback, which is always current.
