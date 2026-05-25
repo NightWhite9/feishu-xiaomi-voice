@@ -21,6 +21,8 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 
 ## Agent Behavior
 
+> **⚠️ This is the ONLY voice skill to load.** Covers sending, TTS generation, and transcription. Do NOT load `audio-transcription`, `speech-to-text`, or any other voice/audio skill — everything you need is here.
+
 ### 1. Intent-based voice decision | 意图识别
 **Analyze the user's message intent before choosing voice or text:**
 
@@ -53,8 +55,9 @@ Send files and 冰糖 AI voice messages to Feishu/Lark via OpenAPI + Xiaomi MiMo
 
 ### 3. Sending protocol
 - **When sending voice, just send it.** Don't announce or explain — the voice itself is the message.
-- **Two-step pipeline:** `text_to_speech` → `send_file.py --msg-type audio`.
-- Voice preference is stored in user role (`**语音偏好:**` entry) for easy modification.
+- **Use `speak.py` via `execute_code` for one-shot delivery.** No intermediate tool output visible to user.
+- When using `speak.py`, always pass `--json` for clean output.
+- Voice preference is stored in user role for easy modification.
 
 ## Scripts
 
